@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Светофор</title>
+    <style>
+
+        #traffic-light {
+            width: 200px;
+            background-color: #333;
+            border-radius: 10px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .red-light, .yellow-light, .green-light {
+            width: 50px;
+            height: 50px;
+            opacity: 0.3;
+            border-radius: 50%;
+            background-color: grey;
+            margin: 15px auto;
+        }
+
+        .red-light.active {
+            opacity: 1;
+            background-color: red;
+        }
+
+        .green-light.active {
+            opacity: 1;
+            background-color: green;
+        }
+
+        .yellow-light.active {
+            opacity: 1;
+            background-color: yellow;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="traffic-light">
+    <div class="red-light"></div>
+    <div class="yellow-light"></div>
+    <div class="green-light"></div>
+    </div>
+
+    <button id="start-button">Старт</button>
+    <button id="stop-button">Стоп</button>
+    <button id="reset-button">Сброс</button>
+    <script>
+        let currentLight = null;
+        let intervalId = null;
+
+        function switchLight() {
+            const lights = ['red-light', 'yellow-light', 'green-light'];
+            let index = lights.indexOf(currentLight);
+
+            if (currentLight === null) {
+                index = 0;
+            }
+            else {
+                index = index + 1;
+                if (index >= lights.length) {
+                    index = 0;
+            }}
+
+            currentLight = lights[index];
+            updateLights();
+        }
+
+        function updateLights() {
+            document.querySelectorAll('.red-light, .yellow-light, .green-light').forEach(light => light.classList.remove('active'));   
+            if (currentLight) {
+            document.querySelector('.' + currentLight).classList.add('active')
+            }
+        }
+
+        document.getElementById('start-button').addEventListener('click', () => {
+            if(!intervalId) {
+                switchLight();
+                intervalId = setInterval(switchLight, 2000);
+            }
+        })
+
+        document.getElementById('stop-button').addEventListener('click', () => {
+            clearInterval(intervalId);
+            intervalId = null;
+        });
+
+        document.getElementById('reset-button').addEventListener('click', () => {
+            clearInterval(intervalId);
+            intervalId = null;
+            currentLight = null;
+            updateLights();
+        })
+    </script>
+</body>
+</html>
